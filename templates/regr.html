@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+<!--  {% if not uploaded %}-->
+  <h1>Map</h1>
+  <form method="POST" enctype="multipart/form-data">
+    <div class="form-group">
+      <input type="file" name="csv_file" class="form-control-file" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+<!--  {% endif %}-->
+</div>
+
+
+<div class="container mt-5">
+  {% if uploaded %}
+  <div class="row">
+
+      <h1>Map Project</h1>
+
+          <div class="col-lg-12">
+            <h2>Head</h2>
+            {{ head|safe }}
+          </div>
+
+          <div class="col-lg-12">
+            <h2>Tail</h2>
+            {{ tail|safe }}
+          </div>
+
+          <div class="col-lg-12">
+            <h2>Info</h2>
+            {{ info }}
+          </div>
+
+          {% if size %}
+          <div class="col-lg-6">
+            <br><br>
+            <h2>Size</h2>
+            <table class="table">
+                 <thead>
+                    <tr>
+                        <th scope="col">Row Size</th>
+                        <th scope="col">Column Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ size[0] }}</td>
+                        <td>{{ size[1] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+          </div>
+          {% endif %}
+
+          {% if columns %}
+          <div class="col-lg-6">
+            <h2>Column names</h2>
+            <table class="table">
+                 <thead>
+                    <tr>
+                        <th scope="col">Columns Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% for i in columns %}
+                        <td>{{ i }}</td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+          </div>
+          {% endif %}
+
+          <!-- missing values-->
+          {% if missing_values_before %}
+          <div class="col-lg-6">
+            <h2>Missing Values Before</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Column Name</th>
+                        <th scope="col">Missing Values Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in columns, count in missing_values_before.items() %}
+                    <tr>
+                        <td>{{ column }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="col-lg-6">
+            <h2>Missing Values Before</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Missing Values Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                    </tr>
+
+                </tbody>
+            </table>
+          </div>
+          {% endif %}
+
+
+          {% if missing_values_after %}
+          <div class="col-lg-6">
+            <h2>Missing Values</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Column Name</th>
+                        <th scope="col">Missing Values Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for column, count in missing_values_after.items() %}
+                    <tr>
+                        <td>{{ column }}</td>
+                        <td>{{ count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+          </div>
+          {% endif %}
+
+          <!-- duplicate values-->
+          {% if duplicate_value_before %}
+          <div class="col-lg-6">
+            <h2>Duplicated Values</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+<!--                        <th scope="col">Column Name</th>-->
+                        <th scope="col">Duplicated Values Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ duplicate_value_before }}</td>
+                    </tr>
+                </tbody>
+            </table>
+          </div>
+          {% else %}
+          <div class="col-lg-6">
+            <h2>Duplicate Values</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Duplicate Values Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+          </div>
+          {% endif %}
+
+          {% if duplicate_value_after %}
+          <div class="col-lg-6">
+            <h2>Duplicated Values after cleaning</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Column Name</th>
+                        <th scope="col"> Values Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ duplicate_value_after }}</td>
+                        <td>{{ duplicate_value_after }}</td>
+                    </tr>
+                </tbody>
+            </table>
+           </div>
+          {% endif %}
+
+           <div class="col-lg-6">
+            <h2>Describe the statictics of csv file</h2>
+            {{ describe|safe }}
+           </div>
+
+           <div class="col-lg-6">
+            <h2>Correlation</h2>
+            {{ correlation|safe }}
+           </div>
+
+          <!--Form-->
+          <div class="col-lg-6">
+            <br><br>
+            <h2>Fill the form to ahead</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <label>Select Target Column:</label>
+                    <select class="form-control" id="column_name" name="column_name">
+                        <option>Selected Column</option>
+                        {% for column in columns %}
+                           <option value="{{ column }}">{{ column }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+    <!--            <div class="form-group">-->
+    <!--                <label for="test-size">Test Size:</label>-->
+    <!--                <input type="text" class="form-control" id="test-size" name="test-size" placeholder="Enter Test Size">-->
+    <!--            </div>-->
+                <div class="form-group">
+                    <label for="algorithm">Select Algorithm:</label>
+                    <select class="form-control" id="algorithm" name="algorithm">
+                        <option>Selected Algorithm</option>
+                        <option value="Decision Tree Regression">Decision Tree Regression</option>
+                        <option value="Linear Regression">Linear Regression</option>
+                        <option value="Random Forest Regression">Random Forest Regression</option>
+                        <option value="SVC Regression">SVC Regression</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button><br><br>
+            </form>
+          </div>
+
+          {% if R2_score %}
+
+          <div class="container">
+
+            {% if R2_score %}
+            <div class="col-lg-12">
+                <br><br>
+                <h2>R2 score</h2>
+                <p>{{ R2_score }}</p>
+            </div>
+            {% endif %}
+
+<!--            {% if Mse %}-->
+            <div class="col-lg-12">
+                <h2>Mean Squared Error</h2>
+                <p>{{ Mse }}</p>
+            </div>
+<!--            {% endif %}-->
+
+            {% if Rmse %}
+            <div class="col-lg-12">
+                <h2>Root mean squared Error</h2>
+                <p>{{ Rmse }}</p>
+            </div>
+            {% endif %}
+
+            {% if Mae %}
+            <div class="col-lg-12">
+                <h2>Mean absolute Error</h2>
+                <p>{{ Mae }}</p>
+            </div>
+            {% endif %}
+
+          </div>
+          {% endif %}
+
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}
+
+
+
+

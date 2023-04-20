@@ -1,0 +1,27 @@
+/* Styles for the black and white theme */
+body, * {
+  background-color: #000;
+  color: #fff;
+}
+
+/* Styles for the light theme */
+body.light-mode, .light-mode * {
+  background-color: #fff;
+  color: #000;
+}
+
+/* Exception for the theme button, which should have a different color */
+.theme-button {
+  background-color: #fff;
+  color: #000;
+}
+
+.table{
+   border: 5px solid grey;
+}
+
+
+/* Adding margin */
+.col-lg-6 {
+      margin-left: 4px;
+}
